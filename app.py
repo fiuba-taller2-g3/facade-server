@@ -1,5 +1,7 @@
 from flask import Flask, request
 
+from services.users_service import login
+
 app = Flask(__name__)
 
 
@@ -18,14 +20,17 @@ def users_login():
     content = request.json
     email = content.get('email')
     password = content.get('password')
-    return email + password
+
+    return login(email, password)
+
 
 @app.route('/admins/login', methods=['POST'])
 def admins_login():
     content = request.json
     email = content.get('email')
     password = content.get('password')
-    return email + password
+
+    return login(email, password)
 
 
 if __name__ == '__main__':
