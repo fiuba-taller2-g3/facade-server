@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from services.users_service import login
+from users_service import login
 
 app = Flask(__name__)
 
