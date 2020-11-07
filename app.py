@@ -10,7 +10,7 @@ users_base_url = 'https://users-server-develop.herokuapp.com/'
 
 def login_user(email, password):
     response = requests.post(users_base_url + 'users/login',
-                             data={"username": email, "password": password})
+                             data={"email": email, "password": password})
 
     print("response:", response.content)
 
