@@ -1,4 +1,4 @@
-import requests
+import requests, json
 from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ def login_user(email, password):
     print("response:", response.content)
 
     if response.status_code == 200:
-        return jsonify({"msg": "Usuario logueado exitosamente"})
+        return jsonify({"msg": "Usuario logueado exitosamente", "api_token": json.loads(response.content)['api_token']})
     elif response.status_code == 404:
         return make_response(jsonify({"msg": "Usuario y/o contraseña invalidos"}), 404)
     else:
@@ -22,10 +22,10 @@ def login_admin(email, password):
     response = requests.post('https://users-server-develop.herokuapp.com/admins/login',
                              data={"email": email, "password": password})
 
-    print("response:", response.content)
+    print("response:", json.loads(response.content))
 
     if response.status_code == 200:
-        return jsonify({"msg": "Administrador logueado exitosamente"})
+        return jsonify({"msg": "Administrador logueado exitosamente", "api_token": json.loads(response.content)['api_token']})
     elif response.status_code == 404:
         return make_response(jsonify({"msg": "Usuario y/o contraseña invalidos"}), 404)
     else:
