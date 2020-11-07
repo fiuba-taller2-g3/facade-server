@@ -37,7 +37,9 @@ def register_user(email, password, name, surname, dni, user_type):
                              data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password,
                                    "type": user_type})
     if response.status_code == 200:
-        return jsonify({"msg": "Usuario registrado exitosamente"})
+        return make_response(jsonify({json.loads(response.content)['msg']}))
+    elif response.status_code == 409:
+        return make_response(jsonify(json.loads(response.content)), 409)
     else:
         return response.content
 
@@ -46,7 +48,9 @@ def register_admin(email, password, name, surname, dni):
     response = requests.post(users_base_url + 'admins',
                              data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password})
     if response.status_code == 200:
-        return jsonify({"msg": "Administrador registrado exitosamente"})
+        return make_response(jsonify({json.loads(response.content)['msg']}))
+    elif response.status_code == 409:
+        return make_response(jsonify(json.loads(response.content)), 409)
     else:
         return response.content
 
