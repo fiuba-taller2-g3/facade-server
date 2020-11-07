@@ -20,7 +20,7 @@ def login(email, password):
 
 @app.route('/hello/<name>')
 def hello_name(name):
-    return requests.get(users_base_url + 'status').content
+    return 'Hello %s!\n' % name
 
 
 @app.route('/')
@@ -48,7 +48,7 @@ def admins_login():
 
 if __name__ == '__main__':
     try:
-        users_base_url = os.environ['USERS_URL']
         app.run(port = os.environ['PORT'])
+        users_base_url = os.environ['USERS_URL']
     except KeyError:
         app.run()
