@@ -12,12 +12,10 @@ def login_user(email, password):
     response = requests.post(users_base_url + 'users/login',
                              data={"email": email, "password": password})
 
-    print("response:", response.content)
-
     if response.status_code == 200:
-        return jsonify({"msg": "Usuario logueado exitosamente", "api_token": json.loads(response.content)['api_token']})
+        return jsonify({"msg": json.loads(response.content)['msg'], "api_token": json.loads(response.content)['api_token']})
     elif response.status_code == 404:
-        return make_response(jsonify({"msg": "Usuario y/o contraseña invalidos"}), 404)
+        return make_response(jsonify({"error": json.loads(response.content)['error']}), 404)
     else:
         return response.content
 
@@ -26,13 +24,10 @@ def login_admin(email, password):
     response = requests.post(users_base_url + 'admins/login',
                              data={"email": email, "password": password})
 
-    print("response:", json.loads(response.content))
-
     if response.status_code == 200:
-        return jsonify(
-            {"msg": "Administrador logueado exitosamente", "api_token": json.loads(response.content)['api_token']})
+        return jsonify({"msg": json.loads(response.content)['msg'], "api_token": json.loads(response.content)['api_token']})
     elif response.status_code == 404:
-        return make_response(jsonify({"msg": "Usuario y/o contraseña invalidos"}), 404)
+        return make_response(jsonify({"error": json.loads(response.content)['error']}), 404)
     else:
         return response.content
 
