@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 users_base_url = 'https://users-server-develop.herokuapp.com/'
 
-def login(email, password):
+def login_user(email, password):
     response = requests.post(users_base_url + 'users/login',
                              data={"username": email, "password": password})
 
