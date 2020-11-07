@@ -3,8 +3,10 @@ from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
 
+users_base_url = 'https://users-server-develop.herokuapp.com/'
+
 def login(email, password):
-    response = requests.post('https://users-server-develop.herokuapp.com/users/login',
+    response = requests.post(users_base_url + 'users/login',
                              data={"username": email, "password": password})
 
     print("response:", response.content)
@@ -18,7 +20,7 @@ def login(email, password):
 
 @app.route('/hello/<name>')
 def hello_name(name):
-    return 'Hello %s!\n' % name
+    return requests.get(users_base_url + 'status').content
 
 
 @app.route('/')
@@ -45,4 +47,8 @@ def admins_login():
 
 
 if __name__ == '__main__':
-    app.run()
+    try:
+        users_base_url = os.environ['USERS_URL']
+        app.run(port = os.environ['PORT'])
+    except KeyError:
+        app.run()

@@ -1,0 +1,38 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    container_name: psql-container
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - my_network
+
+  users:
+    build:
+      context: ../users-server
+    container_name: users-container
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@psql-container:5432/postgres
+      - PORT=5432
+    depends_on:
+      - postgres
+    networks:
+      - my_network
+
+  facade:
+    build: .
+    container_name: facade-container
+    environment:
+      - USERS_URL=https://users:5432/
+      - PORT=5432
+    ports:
+      - 8080:5432
+    depends_on:
+      - users
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
