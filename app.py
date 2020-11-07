@@ -1,11 +1,15 @@
+import os
+
 import requests, json
 from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
 
+users_base_url = 'https://users-server-develop.herokuapp.com/'
+
 
 def login_user(email, password):
-    response = requests.post('https://users-server-develop.herokuapp.com/users/login',
+    response = requests.post(users_base_url + 'users/login',
                              data={"email": email, "password": password})
 
     print("response:", response.content)
@@ -19,13 +23,14 @@ def login_user(email, password):
 
 
 def login_admin(email, password):
-    response = requests.post('https://users-server-develop.herokuapp.com/admins/login',
+    response = requests.post(users_base_url + 'admins/login',
                              data={"email": email, "password": password})
 
     print("response:", json.loads(response.content))
 
     if response.status_code == 200:
-        return jsonify({"msg": "Administrador logueado exitosamente", "api_token": json.loads(response.content)['api_token']})
+        return jsonify(
+            {"msg": "Administrador logueado exitosamente", "api_token": json.loads(response.content)['api_token']})
     elif response.status_code == 404:
         return make_response(jsonify({"msg": "Usuario y/o contraseña invalidos"}), 404)
     else:
@@ -33,7 +38,7 @@ def login_admin(email, password):
 
 
 def register_user(email, password, name, surname, dni, user_type):
-    response = requests.post('https://users-server-develop.herokuapp.com/users',
+    response = requests.post(users_base_url + 'users',
                              data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password,
                                    "type": user_type})
     if response.status_code == 200:
@@ -43,7 +48,7 @@ def register_user(email, password, name, surname, dni, user_type):
 
 
 def register_admin(email, password, name, surname, dni):
-    response = requests.post('https://users-server-develop.herokuapp.com/admins',
+    response = requests.post(users_base_url + 'admins',
                              data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password})
     if response.status_code == 200:
         return jsonify({"msg": "Administrador registrado exitosamente"})
@@ -105,4 +110,8 @@ def admins_register():
 
 
 if __name__ == '__main__':
-    app.run()
+    try:
+        app.run(port=os.environ['PORT'])
+        users_base_url = os.environ['USERS_URL']
+    except KeyError:
+        app.run()
