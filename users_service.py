@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+
 from flask import jsonify, make_response
 
 try:
@@ -33,9 +34,14 @@ def register_admin(email, password, name, surname, dni):
     return manage_register_response(response)
 
 
-def visualize_user(user_id, path):
-    response = requests.get(users_base_url + path + user_id)
-    return make_response(jsonify(json.loads(response.content)), response.status_code)
+def visualize_user(user_id, path, headers):
+    if 'X-Auth-Token' in headers:
+        auth_header = headers['X-Auth-Token']
+        headers = {'X-Auth-Token': auth_header}
+        response = requests.get(users_base_url + path + user_id, headers=headers)
+        return make_response(jsonify(json.loads(response.content)), response.status_code)
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 def manage_register_response(response):

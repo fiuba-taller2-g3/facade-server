@@ -55,7 +55,7 @@ def admins_register():
 
 @app.route('/users/<user_id>')
 def user_visualization(user_id):
-    return visualize_user(user_id, 'users/')
+    return visualize_user(user_id, 'users/', request.headers)
 
 
 if __name__ == '__main__':
