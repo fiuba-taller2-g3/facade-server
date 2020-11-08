@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
 
-users_base_url = "http://users:5432/"
+users_base_url = 'https://users-server-develop.herokuapp.com/'
 
 
 def login_user(email, password):
