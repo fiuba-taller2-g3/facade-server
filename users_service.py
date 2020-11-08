@@ -10,7 +10,7 @@ def login(email, password, path):
                              data={"email": email, "password": password})
 
     if response.status_code == 200:
-        return jsonify({"msg": json.loads(response.content)['msg'], "api_token": json.loads(response.content)['api_token']})
+        return make_response(jsonify(json.loads(response.content)))
     elif response.status_code == 404:
         return make_response(jsonify({"error": json.loads(response.content)['error']}), 404)
     else:
@@ -21,17 +21,16 @@ def register_user(email, password, name, surname, dni, user_type):
     response = requests.post(users_base_url + 'users',
                              data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password,
                                    "type": user_type})
-    if response.status_code == 200:
-        return make_response(jsonify(json.loads(response.content)))
-    elif response.status_code == 409:
-        return make_response(jsonify(json.loads(response.content)), 409)
-    else:
-        return make_response(response.content, 500)
+    return manage_register_response(response)
 
 
 def register_admin(email, password, name, surname, dni):
     response = requests.post(users_base_url + 'admins',
                              data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password})
+    return manage_register_response(response)
+
+
+def manage_register_response(response):
     if response.status_code == 200:
         return make_response(jsonify(json.loads(response.content)))
     elif response.status_code == 409:
