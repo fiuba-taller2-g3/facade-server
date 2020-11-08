@@ -9,7 +9,6 @@ except KeyError:
     users_base_url = 'https://users-server-develop.herokuapp.com/'
 
 def login(email, password, path):
-    print(users_base_url)
     response = requests.post(users_base_url + path,
                              data={"email": email, "password": password})
 
