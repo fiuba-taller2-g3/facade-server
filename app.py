@@ -1,58 +1,9 @@
 import os
-import json
-import requests
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request
+
+from users_service import login, register_user, register_admin
 
 app = Flask(__name__)
-
-users_base_url = 'https://users-server-develop.herokuapp.com/'
-
-
-def login_user(email, password):
-    response = requests.post(users_base_url + 'users/login',
-                             data={"email": email, "password": password})
-
-    if response.status_code == 200:
-        return jsonify({"msg": json.loads(response.content)['msg'], "api_token": json.loads(response.content)['api_token']})
-    elif response.status_code == 404:
-        return make_response(jsonify({"error": json.loads(response.content)['error']}), 404)
-    else:
-        return make_response(response.content, 500)
-
-
-def login_admin(email, password):
-    response = requests.post(users_base_url + 'admins/login',
-                             data={"email": email, "password": password})
-
-    if response.status_code == 200:
-        return jsonify({"msg": json.loads(response.content)['msg'], "api_token": json.loads(response.content)['api_token']})
-    elif response.status_code == 404:
-        return make_response(jsonify({"error": json.loads(response.content)['error']}), 404)
-    else:
-        return make_response(response.content, 500)
-
-
-def register_user(email, password, name, surname, dni, user_type):
-    response = requests.post(users_base_url + 'users',
-                             data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password,
-                                   "type": user_type})
-    if response.status_code == 200:
-        return make_response(jsonify(json.loads(response.content)))
-    elif response.status_code == 409:
-        return make_response(jsonify(json.loads(response.content)), 409)
-    else:
-        return make_response(response.content, 500)
-
-
-def register_admin(email, password, name, surname, dni):
-    response = requests.post(users_base_url + 'admins',
-                             data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password})
-    if response.status_code == 200:
-        return make_response(jsonify(json.loads(response.content)))
-    elif response.status_code == 409:
-        return make_response(jsonify(json.loads(response.content)), 409)
-    else:
-        return make_response(response.content, 500)
 
 
 @app.route('/')
@@ -66,7 +17,7 @@ def users_login():
     email = content.get('email')
     password = content.get('password')
 
-    return login_user(email, password)
+    return login(email, password, "users/login")
 
 
 @app.route('/admins/login', methods=['POST'])
@@ -75,7 +26,7 @@ def admins_login():
     email = content.get('email')
     password = content.get('password')
 
-    return login_admin(email, password)
+    return login(email, password, "admins/login")
 
 
 @app.route('/users', methods=['POST'])
