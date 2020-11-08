@@ -24,7 +24,7 @@ services:
     build: .
     container_name: facade-container
     environment:
-      - USERS_URL=https://users:5432/
+      - USERS_URL=http://users:5432/
       - PORT=5432
     ports:
       - 8080:5432
