@@ -59,11 +59,6 @@ def user_visualization(user_id):
     return visualize_user(user_id, 'users/')
 
 
-@app.route('/admins/<user_id>')
-def admin_visualization(user_id):
-    return visualize_user(user_id, 'admins/')
-
-
 if __name__ == '__main__':
     try:
         users_base_url = os.environ['USERS_URL']
