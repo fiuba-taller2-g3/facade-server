@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request
 
-from users_service import login, register_user, register_admin
+from users_service import login, register_user, register_admin, visualize_user
 
 app = Flask(__name__)
 
@@ -52,6 +52,16 @@ def admins_register():
     dni = content.get('dni')
 
     return register_admin(email, password, name, surname, dni)
+
+
+@app.route('/users/<user_id>')
+def user_visualization(user_id):
+    return visualize_user(user_id, 'users/')
+
+
+@app.route('/admins/<user_id>')
+def admin_visualization(user_id):
+    return visualize_user(user_id, 'admins/')
 
 
 if __name__ == '__main__':
