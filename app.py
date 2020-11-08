@@ -36,7 +36,7 @@ def users_register():
     name = content.get('name')
     surname = content.get('surname')
     dni = content.get('dni')
-    user_type = content.get('huesped')
+    user_type = content.get('type')
 
     return register_user(email, password, name, surname, dni, user_type)
 
