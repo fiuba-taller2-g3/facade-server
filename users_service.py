@@ -1,12 +1,15 @@
+import os
 import requests
 import json
 from flask import jsonify, make_response
 
-users_base_url = 'https://users-server-develop.herokuapp.com/'
-# users_base_url = "http://users:5432/"
-
+try:
+    users_base_url = os.environ['USERS_URL']
+except KeyError:
+    users_base_url = 'https://users-server-develop.herokuapp.com/'
 
 def login(email, password, path):
+    print(users_base_url)
     response = requests.post(users_base_url + path,
                              data={"email": email, "password": password})
 

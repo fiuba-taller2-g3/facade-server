@@ -1,4 +1,3 @@
-import os
 from flask import Flask, request
 
 from users_service import login, register_user, register_admin, visualize_user
@@ -61,7 +60,6 @@ def user_visualization(user_id):
 
 if __name__ == '__main__':
     try:
-        users_base_url = os.environ['USERS_URL']
         app.run(port=os.environ['PORT'])
     except KeyError:
         app.run()

@@ -26,6 +26,7 @@ services:
     environment:
       - USERS_URL=http://users:5432/
       - PORT=5432
+      - PYTHONUNBUFFERED=1
     ports:
       - 8080:5432
     depends_on:
