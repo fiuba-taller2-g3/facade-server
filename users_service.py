@@ -22,10 +22,9 @@ def login(email, password, path):
         return make_response(response.content, response.status_code)
 
 
-def register_user(email, password, name, surname, dni, user_type):
+def register_user(email, password, name, surname, user_type):
     response = requests.post(users_base_url + 'users',
-                             data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password,
-                                   "type": user_type})
+                             data={"name": name, "surname": surname, "email": email, "password": password, "type": user_type})
     return manage_register_response(response)
 
 

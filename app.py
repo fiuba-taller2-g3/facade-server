@@ -35,10 +35,9 @@ def users_register():
     password = content.get('password')
     name = content.get('name')
     surname = content.get('surname')
-    dni = content.get('dni')
     user_type = content.get('type')
 
-    return register_user(email, password, name, surname, dni, user_type)
+    return register_user(email, password, name, surname, user_type)
 
 
 @app.route('/admins', methods=['POST'])
