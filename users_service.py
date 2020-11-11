@@ -24,7 +24,8 @@ def login(email, password, path):
 
 def register_user(email, password, name, surname, user_type):
     response = requests.post(users_base_url + 'users',
-                             data={"name": name, "surname": surname, "email": email, "password": password, "type": user_type})
+                             data={"name": name, "surname": surname, "email": email, "password": password,
+                                   "type": user_type})
     return manage_register_response(response)
 
 
@@ -40,6 +41,17 @@ def visualize_user(user_id, path, headers):
         id_header = headers['X-Id']
         headers = {'X-Auth-Token': auth_header, 'X-Id': id_header}
         response = requests.get(users_base_url + path + user_id, headers=headers)
+        return make_response(jsonify(json.loads(response.content)), response.status_code)
+    else:
+        return make_response(jsonify({"error": "Request sin id y/o token de autorizacion"}), 400)
+
+
+def visualize_users(path, headers):
+    if 'X-Auth-Token' in headers and 'X-Id' in headers:
+        auth_header = headers['X-Auth-Token']
+        id_header = headers['X-Id']
+        headers = {'X-Auth-Token': auth_header, 'X-Id': id_header}
+        response = requests.get(users_base_url + path, headers=headers)
         return make_response(jsonify(json.loads(response.content)), response.status_code)
     else:
         return make_response(jsonify({"error": "Request sin id y/o token de autorizacion"}), 400)
