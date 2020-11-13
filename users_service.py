@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+
 from flask import jsonify, make_response
 
 try:
@@ -8,10 +9,13 @@ try:
 except KeyError:
     users_base_url = 'https://users-server-develop.herokuapp.com/'
 
+<<<<<<< HEAD
 try:
     posts_base_url = os.environ['POSTS_URL']
 except KeyError:
     posts_base_url = 'https://posts-server-develop.herokuapp.com/'
+=======
+>>>>>>> e54b42c88a9f0b08f4467a927e931a6eb40ed289
 
 def login(email, password, path):
     response = requests.post(users_base_url + path,
@@ -25,9 +29,9 @@ def login(email, password, path):
         return make_response(response.content, response.status_code)
 
 
-def register_user(email, password, name, surname, dni, user_type):
+def register_user(email, password, name, surname, user_type):
     response = requests.post(users_base_url + 'users',
-                             data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password,
+                             data={"name": name, "surname": surname, "email": email, "password": password,
                                    "type": user_type})
     return manage_register_response(response)
 
@@ -38,9 +42,26 @@ def register_admin(email, password, name, surname, dni):
     return manage_register_response(response)
 
 
-def visualize_user(user_id, path):
-    response = requests.get(users_base_url + path + user_id)
-    return make_response(jsonify(json.loads(response.content)), response.status_code)
+def visualize_user(user_id, path, headers):
+    if 'X-Auth-Token' in headers and 'X-Id' in headers:
+        auth_header = headers['X-Auth-Token']
+        id_header = headers['X-Id']
+        headers = {'X-Auth-Token': auth_header, 'X-Id': id_header}
+        response = requests.get(users_base_url + path + user_id, headers=headers)
+        return make_response(jsonify(json.loads(response.content)), response.status_code)
+    else:
+        return make_response(jsonify({"error": "Request sin id y/o token de autorizacion"}), 400)
+
+
+def visualize_users(path, headers):
+    if 'X-Auth-Token' in headers and 'X-Id' in headers:
+        auth_header = headers['X-Auth-Token']
+        id_header = headers['X-Id']
+        headers = {'X-Auth-Token': auth_header, 'X-Id': id_header}
+        response = requests.get(users_base_url + path, headers=headers)
+        return make_response(jsonify(json.loads(response.content)), response.status_code)
+    else:
+        return make_response(jsonify({"error": "Request sin id y/o token de autorizacion"}), 400)
 
 
 def manage_register_response(response):
