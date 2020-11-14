@@ -9,6 +9,10 @@ try:
 except KeyError:
     users_base_url = 'https://users-server-develop.herokuapp.com/'
 
+try:
+    posts_base_url = os.environ['POSTS_URL']
+except KeyError:
+    posts_base_url = 'https://posts-server-develop.herokuapp.com/'
 
 def login(email, password, path):
     response = requests.post(users_base_url + path,
