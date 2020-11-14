@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from users_service import login, register_user, register_admin, visualize_user, visualize_users
+from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user
 
 app = Flask(__name__)
 
@@ -60,6 +60,12 @@ def user_visualization(user_id):
 @app.route('/users')
 def users_visualization():
     return visualize_users('users', request.headers)
+
+
+@app.route('/users/<user_id>', methods=['PUT'])
+def users_block(user_id):
+    content = request.json
+    return block_user(user_id, 'users/', request.headers, content.get("is_blocked"))
 
 
 if __name__ == '__main__':

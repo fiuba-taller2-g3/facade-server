@@ -57,6 +57,17 @@ def visualize_users(path, headers):
         return make_response(jsonify({"error": "Request sin id y/o token de autorizacion"}), 400)
 
 
+def block_user(user_id, path, headers, is_blocked):
+    if 'X-Auth-Token' in headers and 'X-Id' in headers:
+        auth_header = headers['X-Auth-Token']
+        id_header = headers['X-Id']
+        headers = {'X-Auth-Token': auth_header, 'X-Id': id_header}
+        response = requests.put(users_base_url + path + user_id, headers=headers, data={"is_blocked": is_blocked})
+        return make_response(jsonify(json.loads(response.content)), response.status_code)
+    else:
+        return make_response(jsonify({"error": "Request sin id y/o token de autorizacion"}), 400)
+
+
 def manage_register_response(response):
     if response.status_code == 200:
         return make_response(jsonify(json.loads(response.content)))
