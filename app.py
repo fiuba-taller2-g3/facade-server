@@ -62,7 +62,7 @@ def users_visualization():
     return visualize_users('users', request.headers)
 
 
-@app.route('/users/<user_id>', methods=['PUT'])
+@app.route('/users/<user_id>', methods=['PATCH'])
 def users_block(user_id):
     content = request.json
     return block_user(user_id, 'users/', request.headers, content.get("is_blocked"))

@@ -14,6 +14,7 @@ try:
 except KeyError:
     posts_base_url = 'https://posts-server-develop.herokuapp.com/'
 
+
 def login(email, password, path):
     response = requests.post(users_base_url + path,
                              data={"email": email, "password": password})
@@ -66,7 +67,7 @@ def block_user(user_id, path, headers, is_blocked):
         auth_header = headers['X-Auth-Token']
         id_header = headers['X-Id']
         headers = {'X-Auth-Token': auth_header, 'X-Id': id_header}
-        response = requests.put(users_base_url + path + user_id, headers=headers, data={"is_blocked": is_blocked})
+        response = requests.patch(users_base_url + path + user_id, headers=headers, data={"is_blocked": is_blocked})
         return make_response(jsonify(json.loads(response.content)), response.status_code)
     else:
         return make_response(jsonify({"error": "Request sin id y/o token de autorizacion"}), 400)
