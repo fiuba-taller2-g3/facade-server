@@ -27,10 +27,10 @@ def login(email, password, path):
         return make_response(response.content, response.status_code)
 
 
-def register_user(email, password, name, surname, user_type):
+def register_user(email, password, name, surname, user_type, phone_number, gender, birth_date):
     response = requests.post(users_base_url + 'users',
                              data={"name": name, "surname": surname, "email": email, "password": password,
-                                   "type": user_type})
+                                   "type": user_type, "phone_number": phone_number, "gender": gender, "birth_date": birth_date})
     return manage_register_response(response)
 
 
