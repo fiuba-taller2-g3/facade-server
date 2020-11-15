@@ -1,4 +1,6 @@
-from flask import Flask, request
+import os
+
+from flask import Flask, request, jsonify, make_response
 
 from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user
 
@@ -57,18 +59,29 @@ def admins_register():
 
 @app.route('/users/<user_id>')
 def user_visualization(user_id):
-    return visualize_user(user_id, 'users/', request.headers)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return visualize_user(user_id, 'users/', api_token)
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 @app.route('/users')
 def users_visualization():
-    return visualize_users('users', request.headers)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return visualize_users('users', api_token)
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 @app.route('/users/<user_id>', methods=['PATCH'])
 def users_block(user_id):
-    content = request.json
-    return block_user(user_id, 'users/', request.headers, content.get("is_blocked"))
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return block_user(user_id, 'users/', api_token, request.json.get("is_blocked"))
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 if __name__ == '__main__':
