@@ -38,7 +38,8 @@ def login(email, password, path):
 def register_user(email, password, name, surname, user_type, phone_number, gender, birth_date):
     response = requests.post(users_base_url + 'users',
                              data={"name": name, "surname": surname, "email": email, "password": password,
-                                   "type": user_type, "phone_number": phone_number, "gender": gender, "birth_date": birth_date})
+                                   "type": user_type, "phone_number": phone_number, "gender": gender,
+                                   "birth_date": birth_date})
     return manage_register_response(response)
 
 
@@ -74,6 +75,23 @@ def block_user(user_id, path, api_token, is_blocked):
     try:
         if verify_admin_token(api_token):
             response = requests.patch(users_base_url + path + user_id, data={"is_blocked": is_blocked})
+            return make_response(jsonify(json.loads(response.content)), response.status_code)
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
+
+
+def update_user(user_id, path, api_token, body):
+    try:
+        if verify_user_token(api_token):
+            response = requests.put(users_base_url + path + user_id, data={"name": body.get("name"),
+                                                                           "surname": body.get("surname"),
+                                                                           "email": body.get("email"),
+                                                                           "password": body.get("password"),
+                                                                           "phone_number": body.get("phone_number"),
+                                                                           "gender": body.get("gender"),
+                                                                           "birth_date": body.get("birth_date")})
             return make_response(jsonify(json.loads(response.content)), response.status_code)
         else:
             return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)

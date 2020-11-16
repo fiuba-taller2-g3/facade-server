@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, request, jsonify, make_response
 
-from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user
+from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user
 
 app = Flask(__name__)
 
@@ -80,6 +80,15 @@ def users_block(user_id):
     if 'API_TOKEN' in request.headers:
         api_token = request.headers['API_TOKEN']
         return block_user(user_id, 'users/', api_token, request.json.get("is_blocked"))
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
+
+@app.route('/users/<user_id>', methods=['PUT'])
+def users_update(user_id):
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return update_user(user_id, 'users/', api_token, request.json)
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
