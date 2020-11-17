@@ -36,7 +36,8 @@ services:
       - my_network
 
   posts:
-    build: ../posts-server
+    build:
+      context: ../posts-server
     container_name: posts-container
     environment:
       - DATABASE_URL=postgres://postgres:postgres@psql-container:5432/postgres
