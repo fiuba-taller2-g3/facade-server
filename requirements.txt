@@ -3,7 +3,7 @@ chardet==3.0.4
 Click==7.0
 clickclick==1.2.2
 connexion==2.3.0
-Flask==1.1.1
+Flask~=1.1.2
 idna==2.8
 inflection==0.3.1
 itsdangerous==1.1.0
@@ -12,10 +12,12 @@ jsonschema==2.6.0
 MarkupSafe==1.1.1
 openapi-spec-validator==0.2.8
 PyYAML==5.1.2
-requests==2.22.0
+requests~=2.18.4
 six==1.12.0
 swagger-ui-bundle==0.0.5
 urllib3==1.25.3
 Werkzeug==0.15.5
 dnspython==1.16.0
 gunicorn==19.9.0
+
+PyJWT~=1.5.3

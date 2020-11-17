@@ -1,6 +1,8 @@
-from flask import Flask, request
+import os
 
-from users_service import login, register_user, register_admin, visualize_user, visualize_users
+from flask import Flask, request, jsonify, make_response
+
+from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user
 
 app = Flask(__name__)
 
@@ -36,8 +38,11 @@ def users_register():
     name = content.get('name')
     surname = content.get('surname')
     user_type = content.get('type')
+    phone_number = content.get('phone_number')
+    gender = content.get('gender')
+    birth_date = content.get('birth_date')
 
-    return register_user(email, password, name, surname, user_type)
+    return register_user(email, password, name, surname, user_type, phone_number, gender, birth_date)
 
 
 @app.route('/admins', methods=['POST'])
@@ -54,12 +59,38 @@ def admins_register():
 
 @app.route('/users/<user_id>')
 def user_visualization(user_id):
-    return visualize_user(user_id, 'users/', request.headers)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return visualize_user(user_id, 'users/', api_token)
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 @app.route('/users')
 def users_visualization():
-    return visualize_users('users', request.headers)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return visualize_users('users', api_token)
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
+
+@app.route('/users/<user_id>', methods=['PATCH'])
+def users_block(user_id):
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return block_user(user_id, 'users/', api_token, request.json.get("is_blocked"))
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
+
+@app.route('/users/<user_id>', methods=['PUT'])
+def users_update(user_id):
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return update_user(user_id, 'users/', api_token, request.json)
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 if __name__ == '__main__':
