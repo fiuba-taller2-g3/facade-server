@@ -3,6 +3,7 @@ import os
 from flask import Flask, request, jsonify, make_response
 
 from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user
+from authorization_service import admins_is_empty
 
 app = Flask(__name__)
 
@@ -47,14 +48,17 @@ def users_register():
 
 @app.route('/admins', methods=['POST'])
 def admins_register():
-    content = request.json
-    email = content.get('email')
-    password = content.get('password')
-    name = content.get('name')
-    surname = content.get('surname')
-    dni = content.get('dni')
-
-    return register_admin(email, password, name, surname, dni)
+    if 'API_TOKEN' in request.headers or admins_is_empty():
+        api_token = request.headers['API_TOKEN']
+        content = request.json
+        email = content.get('email')
+        password = content.get('password')
+        name = content.get('name')
+        surname = content.get('surname')
+        dni = content.get('dni')
+        return register_admin(email, password, name, surname, dni, api_token)
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 @app.route('/users/<user_id>')
