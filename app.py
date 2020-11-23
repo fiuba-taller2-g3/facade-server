@@ -11,6 +11,13 @@ app = Flask(__name__)
 def hello():
     return 'Hello World!\n'
 
+@app.route('/accomodations', methods=['POST'])
+@app.route('/accommodations/<accommodation_id>')
+@app.route('/accommodations/<accommodation_id>', methods=['PATCH'])
+@app.route('/accommodations/<accommodation_id>', methods=['DELETE'])
+@app.route('/accommodations')
+
+request.args.get('user_id')
 
 @app.route('/users/login', methods=['POST'])
 def users_login():
