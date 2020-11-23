@@ -3,7 +3,7 @@ import jwt
 
 JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS256'
-JWT_EXP_DELTA_SECONDS = 600
+JWT_EXP_DELTA_SECONDS = 1200
 
 admins = {}
 users = {}
@@ -52,3 +52,7 @@ def verify_admin_token(token):
         return False
     except jwt.exceptions.DecodeError:
         return False
+
+
+def admins_is_empty():
+    return not bool(admins)

@@ -5,7 +5,7 @@ import requests
 import json
 
 from flask import jsonify, make_response
-from authorization_service import generate_user_token, generate_admin_token, verify_user_token, verify_admin_token
+from authorization_service import generate_user_token, generate_admin_token, verify_user_token, verify_admin_token, admins_is_empty
 
 try:
     users_base_url = os.environ['USERS_URL']
@@ -43,10 +43,16 @@ def register_user(email, password, name, surname, user_type, phone_number, gende
     return manage_register_response(response)
 
 
-def register_admin(email, password, name, surname, dni):
-    response = requests.post(users_base_url + 'admins',
-                             data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password})
-    return manage_register_response(response)
+def register_admin(email, password, name, surname, dni, api_token):
+    try:
+        if verify_admin_token(api_token) or admins_is_empty():
+            response = requests.post(users_base_url + 'admins',
+                                     data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password})
+            return manage_register_response(response)
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
 
 
 def visualize_user(user_id, path, api_token):
