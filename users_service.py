@@ -94,7 +94,6 @@ def update_user(user_id, path, api_token, body):
             response = requests.put(users_base_url + path + user_id, data={"name": body.get("name"),
                                                                            "surname": body.get("surname"),
                                                                            "email": body.get("email"),
-                                                                           "password": body.get("password"),
                                                                            "phone_number": body.get("phone_number"),
                                                                            "gender": body.get("gender"),
                                                                            "birth_date": body.get("birth_date")})
