@@ -1,7 +1,7 @@
 import os
-
 from flask import Flask, request, jsonify, make_response
 
+from posts_service import *
 from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user
 from authorization_service import admins_is_empty
 
@@ -11,6 +11,30 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
     return 'Hello World!\n'
+
+@app.route('/posts/reset', methods=['DELETE'])
+def reset_posts():
+    return reset(request)
+
+@app.route('/posts', methods=['POST'])
+def new_post():
+    return new(request)
+
+@app.route('/posts/<post_id>')
+def visualize_post(post_id):
+    return visualize(request)
+
+@app.route('/posts/<post_id>', methods=['PATCH'])
+def edit_post(post_id):
+    return edit(request)
+
+@app.route('/posts/<post_id>', methods=['DELETE'])
+def delete_post(post_id):
+    return delete(request)
+
+@app.route('/posts')
+def visualize_posts_from_user():
+    return visualize_from_user(request)
 
 
 @app.route('/users/login', methods=['POST'])

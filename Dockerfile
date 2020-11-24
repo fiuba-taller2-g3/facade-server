@@ -4,8 +4,6 @@ RUN pip install Flask
 RUN pip install requests
 RUN pip install pyjwt
 
-COPY ./users_service.py .
-COPY authorization_service.py .
-COPY ./app.py .
+COPY . .
 EXPOSE $PORT
 CMD gunicorn app:app

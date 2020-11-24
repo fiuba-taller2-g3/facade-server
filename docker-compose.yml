@@ -15,6 +15,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@psql-container:5432/postgres
       - PORT=5432
+      - PYTHONUNBUFFERED=1
     depends_on:
       - postgres
     networks:
