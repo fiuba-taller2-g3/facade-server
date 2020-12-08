@@ -8,6 +8,19 @@ services:
     networks:
       - my_network
 
+  # backoffice:
+  #   build:
+  #     context: ../bookbnb-front
+  #   container_name: backoffice-container
+  #   environment:
+  #     - PORT=3000
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - my_network
+  #   volumes:
+  #     - /node_modules:/node_modules:rw
+
   users:
     build:
       context: ../users-server

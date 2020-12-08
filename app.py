@@ -1,12 +1,12 @@
 import os
 from flask import Flask, request, jsonify, make_response
-
+from flask_cors import CORS
 from posts_service import *
 from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user
 from authorization_service import admins_is_empty
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/')
 def hello():
