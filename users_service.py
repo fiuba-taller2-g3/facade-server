@@ -29,11 +29,10 @@ def login(email, password, path):
         return make_response(response.content, response.status_code)
 
 
-def register_user(email, password, name, surname, user_type, phone_number, gender, birth_date):
+def register_user(email, password, name, surname, phone_number, gender, birth_date):
     response = requests.post(users_base_url + 'users',
                              data={"name": name, "surname": surname, "email": email, "password": password,
-                                   "type": user_type, "phone_number": phone_number, "gender": gender,
-                                   "birth_date": birth_date})
+                                   "phone_number": phone_number, "gender": gender, "birth_date": birth_date})
     return manage_register_response(response)
 
 
@@ -88,7 +87,6 @@ def update_user(user_id, path, api_token, body):
             response = requests.put(users_base_url + path + user_id, data={"name": body.get("name"),
                                                                            "surname": body.get("surname"),
                                                                            "email": body.get("email"),
-                                                                           "password": body.get("password"),
                                                                            "phone_number": body.get("phone_number"),
                                                                            "gender": body.get("gender"),
                                                                            "birth_date": body.get("birth_date")})

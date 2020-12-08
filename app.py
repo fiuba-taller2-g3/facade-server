@@ -62,12 +62,11 @@ def users_register():
     password = content.get('password')
     name = content.get('name')
     surname = content.get('surname')
-    user_type = content.get('type')
     phone_number = content.get('phone_number')
     gender = content.get('gender')
     birth_date = content.get('birth_date')
 
-    return register_user(email, password, name, surname, user_type, phone_number, gender, birth_date)
+    return register_user(email, password, name, surname, phone_number, gender, birth_date)
 
 
 @app.route('/admins', methods=['POST'])
