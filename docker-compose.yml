@@ -14,6 +14,7 @@ services:
   #   container_name: backoffice-container
   #   environment:
   #     - PORT=3000
+  #     - FACADE_URL=http://facade:5432/
   #   ports:
   #     - 3000:3000
   #   networks:
@@ -42,6 +43,7 @@ services:
       - POSTS_URL=http://posts:5432/
       - PORT=5432
       - PYTHONUNBUFFERED=1
+      - LOCAL_TOKEN=NO_TOKEN
     ports:
       - 8080:5432
     depends_on:

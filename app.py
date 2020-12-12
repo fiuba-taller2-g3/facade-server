@@ -18,23 +18,43 @@ def reset_posts():
 
 @app.route('/posts', methods=['POST'])
 def new_post():
-    return new(request)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return new()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 @app.route('/posts/<post_id>')
 def visualize_post(post_id):
-    return visualize(request)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return visualize()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 @app.route('/posts/<post_id>', methods=['PATCH'])
 def edit_post(post_id):
-    return edit(request)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return edit()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 @app.route('/posts/<post_id>', methods=['DELETE'])
 def delete_post(post_id):
-    return delete(request)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return delete()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 @app.route('/posts')
 def visualize_posts_from_user():
-    return visualize_from_user(request)
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return visualize_from_user()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 @app.route('/users/login', methods=['POST'])

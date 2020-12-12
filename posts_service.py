@@ -1,33 +1,66 @@
 import os
 import requests
 import json
+import jwt
 from flask import jsonify, make_response, request
+from users_service import verify_user_token, verify_admin_token
 
 try:
     posts_base_url = os.environ['POSTS_URL']
 except KeyError:
     posts_base_url = 'https://posts-server-develop.herokuapp.com/'
 
-def new(req):
-    response = requests.post(posts_base_url + request.full_path, json=request.json)
-    return response.content
+def new():
+    try:
+        if verify_user_token(request.headers['API_TOKEN']):
+            response = requests.post(posts_base_url + request.full_path, json=request.json)
+            return response.content
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
 
-def visualize(request):
-    response = requests.get(posts_base_url + request.full_path)
-    return response.content
 
-def edit(request):
-    response = requests.patch(posts_base_url + request.full_path, json=request.json)
-    return response.content
+def visualize():
+    try:
+        if verify_user_token(request.headers['API_TOKEN']) or verify_admin_token(request.headers['API_TOKEN']):
+            response = requests.get(posts_base_url + request.full_path)
+            return response.content
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
 
-def delete(request):
-    response = requests.delete(posts_base_url + request.full_path)
-    return response.content
+def edit():
+    try:
+        if verify_user_token(request.headers['API_TOKEN']) or verify_admin_token(request.headers['API_TOKEN']):
+            response = requests.patch(posts_base_url + request.full_path, json=request.json)
+            return response.content
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
 
-def visualize_from_user(request):
-    response = requests.get(posts_base_url + request.full_path)
-    return response.content
+def delete():
+    try:
+        if verify_user_token(request.headers['API_TOKEN']):
+            response = requests.delete(posts_base_url + request.full_path)
+            return response.content
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
 
-def reset(request):
+def visualize_from_user():
+    try:
+        if verify_user_token(request.headers['API_TOKEN']) or verify_admin_token(request.headers['API_TOKEN']):
+            response = requests.get(posts_base_url + request.full_path)
+            return response.content
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
+
+def reset():
     response = requests.delete(posts_base_url + request.full_path)
     return response.content

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import jwt
+import os
 
 JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS256'
@@ -34,6 +35,11 @@ def generate_admin_token(login_response):
 
 def verify_user_token(token):
     try:
+        if os.environ['LOCAL_TOKEN'] == 'NO_TOKEN':
+            return True
+    except:
+        pass
+    try:
         decoded_token = jwt.decode(token, 'secret', algorithms=[JWT_ALGORITHM])
         user_id = decoded_token['id']
         if user_id in users.keys():
@@ -44,6 +50,11 @@ def verify_user_token(token):
 
 
 def verify_admin_token(token):
+    try:
+        if os.environ['LOCAL_TOKEN'] == 'NO_TOKEN':
+            return True
+    except:
+        pass
     try:
         decoded_token = jwt.decode(token, 'secret', algorithms=[JWT_ALGORITHM])
         admin_id = decoded_token['id']
