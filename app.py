@@ -12,9 +12,9 @@ CORS(app)
 def hello():
     return 'Hello World!\n'
 
-@app.route('/posts/reset', methods=['DELETE'])
+@app.route('/posts', methods=['DELETE'])
 def reset_posts():
-    return reset(request)
+    return reset()
 
 @app.route('/posts', methods=['POST'])
 def new_post():
@@ -49,10 +49,18 @@ def delete_post(post_id):
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 @app.route('/posts')
-def visualize_posts_from_user():
+def search_posts():
     if 'API_TOKEN' in request.headers:
         api_token = request.headers['API_TOKEN']
-        return visualize_from_user()
+        return search()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
+@app.route('/bookings', methods=['POST'])
+def new_booking():
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return create_new_booking()
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
