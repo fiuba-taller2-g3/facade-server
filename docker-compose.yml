@@ -28,6 +28,20 @@ services:
     container_name: users-container
     environment:
       - DATABASE_URL=postgres://postgres:postgres@psql-container:5432/postgres
+      - PAYMENTS_URL=http://payments:5432/
+      - PORT=5432
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - postgres
+    networks:
+      - my_network
+
+  payments:
+    build:
+      context: ../payments-server
+    container_name: payments-container
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@psql-container:5432/postgres
       - PORT=5432
       - PYTHONUNBUFFERED=1
     depends_on:
@@ -57,6 +71,7 @@ services:
     container_name: posts-container
     environment:
       - DATABASE_URL=postgres://postgres:postgres@psql-container:5432/postgres
+      - PAYMENTS_URL=http://payments:5432/
       - PORT=5432
       - PYTHONUNBUFFERED=1
     depends_on:
