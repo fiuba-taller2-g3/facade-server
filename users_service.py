@@ -5,12 +5,14 @@ import requests
 import json
 
 from flask import jsonify, make_response
-from authorization_service import generate_user_token, generate_admin_token, verify_user_token, verify_admin_token, admins_is_empty
+from authorization_service import generate_user_token, generate_admin_token, verify_user_token, verify_admin_token, \
+    admins_is_empty
 
 try:
     users_base_url = os.environ['USERS_URL']
 except KeyError:
     users_base_url = 'https://users-server-develop.herokuapp.com/'
+
 
 def login(email, password, path):
     response = requests.post(users_base_url + path,
@@ -29,6 +31,20 @@ def login(email, password, path):
         return make_response(response.content, response.status_code)
 
 
+def login_fb(email, fb_id):
+    response = requests.post(users_base_url + 'users/login_fb',
+                             data={"id": fb_id, "email": email})
+
+    if response.status_code == 200:
+        token = generate_user_token(json.loads(response.content))
+        print("token login fb:", token)
+        return make_response(jsonify({"api_token": token}))
+    elif response.status_code == 404:
+        return make_response(jsonify(json.loads(response.content)), response.status_code)
+    else:
+        return make_response(response.content, response.status_code)
+
+
 def register_user(email, password, name, surname, phone_number, gender, birth_date):
     response = requests.post(users_base_url + 'users',
                              data={"name": name, "surname": surname, "email": email, "password": password,
@@ -36,11 +52,21 @@ def register_user(email, password, name, surname, phone_number, gender, birth_da
     return manage_register_response(response)
 
 
+def register_fb_user(email, fb_id, name, surname, phone_number, gender, birth_date):
+    response = requests.post(users_base_url + 'fb/users',
+                             data={"name": name, "surname": surname, "email": email, "id": fb_id, 'password': '',
+                                   "phone_number": phone_number, "gender": gender, "birth_date": birth_date})
+    response = manage_register_response(response)
+    if response.status_code == 200:
+        return login_fb(email, fb_id)
+
+
 def register_admin(email, password, name, surname, dni, api_token):
     try:
         if verify_admin_token(api_token) or admins_is_empty():
             response = requests.post(users_base_url + 'admins',
-                                     data={"name": name, "surname": surname, "dni": dni, "email": email, "password": password})
+                                     data={"name": name, "surname": surname, "dni": dni, "email": email,
+                                           "password": password})
             return manage_register_response(response)
         else:
             return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)

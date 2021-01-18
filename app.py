@@ -2,19 +2,22 @@ import os
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from posts_service import *
-from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user
+from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user, register_fb_user, login_fb
 from authorization_service import admins_is_empty
 
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route('/')
 def hello():
     return 'Hello World!\n'
 
+
 @app.route('/posts', methods=['DELETE'])
 def reset_posts():
     return reset()
+
 
 @app.route('/posts', methods=['POST'])
 def new_post():
@@ -24,6 +27,7 @@ def new_post():
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
+
 @app.route('/posts/<post_id>')
 def visualize_post(post_id):
     if 'API_TOKEN' in request.headers:
@@ -31,6 +35,7 @@ def visualize_post(post_id):
         return visualize()
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
 
 @app.route('/posts/<post_id>', methods=['PATCH'])
 def edit_post(post_id):
@@ -40,6 +45,7 @@ def edit_post(post_id):
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
+
 @app.route('/posts/<post_id>', methods=['DELETE'])
 def delete_post(post_id):
     if 'API_TOKEN' in request.headers:
@@ -48,6 +54,7 @@ def delete_post(post_id):
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
+
 @app.route('/posts')
 def search_posts():
     if 'API_TOKEN' in request.headers:
@@ -55,6 +62,7 @@ def search_posts():
         return search()
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
 
 @app.route('/bookings', methods=['POST'])
 def new_booking():
@@ -72,6 +80,15 @@ def users_login():
     password = content.get('password')
 
     return login(email, password, "users/login")
+
+
+@app.route('/users/login_fb', methods=['POST'])
+def users_login_fb():
+    content = request.json
+    email = content.get('email')
+    fb_id = content.get('id')
+
+    return login_fb(email, fb_id)
 
 
 @app.route('/admins/login', methods=['POST'])
@@ -95,6 +112,20 @@ def users_register():
     birth_date = content.get('birth_date')
 
     return register_user(email, password, name, surname, phone_number, gender, birth_date)
+
+
+@app.route('/fb/users', methods=['POST'])
+def users_register_fb():
+    content = request.json
+    fb_id = content.get('id')
+    name = content.get('name')
+    surname = content.get('surname')
+    email = content.get('email')
+    phone_number = content.get('phone_number')
+    gender = content.get('gender')
+    birth_date = content.get('birth_date')
+
+    return register_fb_user(email, fb_id, name, surname, phone_number, gender, birth_date)
 
 
 @app.route('/admins', methods=['POST'])
