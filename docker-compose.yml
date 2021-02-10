@@ -55,6 +55,7 @@ services:
     environment:
       - USERS_URL=http://users:5432/
       - POSTS_URL=http://posts:5432/
+      - PAYMENTS_URL=http://payments:5432/
       - PORT=5432
       - PYTHONUNBUFFERED=1
       - LOCAL_TOKEN=NO_TOKEN

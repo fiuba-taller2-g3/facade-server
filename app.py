@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from posts_service import *
+from payments_service import *
 from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user, register_fb_user, login_fb
 from authorization_service import admins_is_empty
 
@@ -12,6 +13,15 @@ CORS(app)
 @app.route('/')
 def hello():
     return 'Hello World!\n'
+
+
+@app.route('/transference', methods=['POST'])
+def transfer_funds():
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return transfer()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 
 @app.route('/posts', methods=['DELETE'])
