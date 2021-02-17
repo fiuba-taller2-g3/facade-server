@@ -71,6 +71,26 @@ def create_new_booking():
     except jwt.exceptions.ExpiredSignatureError:
         return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
 
+def accept_booking():
+    try:
+        if verify_user_token(request.headers['API_TOKEN']):
+            response = requests.post(posts_base_url + request.full_path, json=request.json)
+            return response.content
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
+
+def get_bookings():
+    try:
+        if verify_user_token(request.headers['API_TOKEN']):
+            response = requests.get(posts_base_url + request.full_path, json=request.json)
+            return response.content
+        else:
+            return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
+    except jwt.exceptions.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token expirado, debe loguearse de nuevo"}), 401)
+
 def reset():
     response = requests.delete(posts_base_url + request.full_path)
     return response.content

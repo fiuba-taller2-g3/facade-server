@@ -73,12 +73,27 @@ def search_posts():
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
+@app.route('/bookings', methods=['GET'])
+def get_booking():
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return get_bookings()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 @app.route('/bookings', methods=['POST'])
 def new_booking():
     if 'API_TOKEN' in request.headers:
         api_token = request.headers['API_TOKEN']
         return create_new_booking()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
+@app.route('/acceptance', methods=['POST'])
+def new_accept_booking():
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return accept_booking()
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
