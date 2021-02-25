@@ -23,6 +23,21 @@ def transfer_funds():
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
+@app.route('/feedback', methods=['POST'])
+def new_feedback():
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return new_feed()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
+@app.route('/feedback')
+def search_feedback():
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return search_feed()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
 @app.route('/posts', methods=['DELETE'])
 def reset_posts():
