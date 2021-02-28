@@ -2,7 +2,8 @@ import os
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from posts_service import *
-from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, update_user, register_fb_user, login_fb
+from users_service import login, register_user, register_admin, visualize_user, visualize_users, block_user, \
+    update_user, register_fb_user, login_fb
 from authorization_service import admins_is_empty
 
 app = Flask(__name__)
@@ -184,3 +185,15 @@ if __name__ == '__main__':
         app.run(port=os.environ['PORT'])
     except KeyError:
         app.run()
+
+
+@app.route('/notifications', methods=['POST'])
+def notifications():
+    response = requests.post(posts_base_url + "notifications")
+    return response.content
+
+
+@app.route('/tokens', methods=['POST'])
+def save_token():
+    response = requests.post(posts_base_url + "tokens", json=request.json)
+    return response.content
