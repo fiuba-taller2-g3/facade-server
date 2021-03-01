@@ -24,6 +24,22 @@ def transfer_funds():
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
+@app.route('/users/<wallet_id>/balance', methods=['GET'])
+def get_balance(wallet_id):
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return balance()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
+@app.route('/users/<wallet_id>/transactions', methods=['GET'])
+def get_transactions(wallet_id):
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return transactions()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
 
 @app.route('/feedback', methods=['POST'])
 def new_feedback():
