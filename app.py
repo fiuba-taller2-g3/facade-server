@@ -239,6 +239,14 @@ def save_token():
     return response.content
 
 
+@app.route('/posts/metrics')
+def posts_for_metrics():
+    from_date = request.args.get('from_date')
+    to_date = request.args.get('to_date')
+    response = requests.get(posts_base_url + "posts/metrics?from_date=" + from_date + "&to_date=" + to_date)
+    return response.content
+
+
 if __name__ == '__main__':
     try:
         app.run(port=os.environ['PORT'])
