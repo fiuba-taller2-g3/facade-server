@@ -256,10 +256,18 @@ def save_token():
 
 
 @app.route('/posts/metrics')
-def posts_for_metrics():
+def metrics_posts():
     from_date = request.args.get('from_date')
     to_date = request.args.get('to_date')
     response = requests.get(posts_base_url + "posts/metrics?from_date=" + from_date + "&to_date=" + to_date)
+    return response.content
+
+
+@app.route('/bookings/metrics')
+def metrics_bookings():
+    from_date = request.args.get('from_date')
+    to_date = request.args.get('to_date')
+    response = requests.get(posts_base_url + "bookings/metrics?from_date=" + from_date + "&to_date=" + to_date)
     return response.content
 
 
