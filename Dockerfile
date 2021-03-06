@@ -6,4 +6,4 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 EXPOSE $PORT
-CMD gunicorn app:app
+CMD newrelic-admin run-program gunicorn app:app
