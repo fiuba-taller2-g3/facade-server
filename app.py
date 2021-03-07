@@ -135,6 +135,14 @@ def new_accept_booking():
     else:
         return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
 
+@app.route('/rejectance', methods=['POST'])
+def new_reject_booking():
+    if 'API_TOKEN' in request.headers:
+        api_token = request.headers['API_TOKEN']
+        return reject_booking()
+    else:
+        return make_response(jsonify({"error": "Request sin token de autorizacion"}), 400)
+
 
 @app.route('/users/login', methods=['POST'])
 def users_login():
