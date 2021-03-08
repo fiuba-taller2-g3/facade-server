@@ -80,7 +80,7 @@ def delete():
 def search():
     try:
         if verify_user_token(request.headers['API_TOKEN']) or verify_admin_token(request.headers['API_TOKEN']):
-            response = requests.get(posts_base_url + request.full_path)
+            response = requests.get(posts_base_url + request.full_path, json=request.json)
             return make_response(response.content, response.status_code)
         else:
             return make_response(jsonify({"error": "No estas autorizado para hacer este request"}), 401)
