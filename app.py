@@ -252,8 +252,7 @@ def users_update(user_id):
 
 @app.route('/notifications', methods=['POST'])
 def notifications():
-    user_id = request.args.get('user_id')
-    response = requests.post(posts_base_url + "notifications?user_id=" + user_id)
+    response = requests.post(posts_base_url + "notifications", json=request.json)
     return response.content
 
 
