@@ -1,8 +1,8 @@
 # facade-server
 
-local:
-sudo docker build . -t facade-image
-sudo docker run --name facade-server -d -e PORT=5432 -p 5433:5432 facade-image
+Ejecutar el siguiente comando dentro directorio del repositorio levantar localmente los servicios del backend (los 4 repositorios deben estar clonados en el mismo directorio):
+sudo docker-compose up --build
+
 
 heroku develop:
 https://facade-server-develop.herokuapp.com/
